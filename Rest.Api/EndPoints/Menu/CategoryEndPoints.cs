@@ -1,8 +1,7 @@
 ﻿using REST.Application.Services.Menu;
-using REST.Domain.Common.Response;
 using REST.Domain.Models.Menu;
 
-namespace Rest.Api.EndPoints;
+namespace Rest.Api.EndPoints.Menu;
 
 public static class CategoryEndPoints
 {
@@ -13,10 +12,21 @@ public static class CategoryEndPoints
 
   private static void MapCategory(this RouteGroupBuilder groupBuilder)
   {
-    groupBuilder.MapPost(
-      "/",
+    groupBuilder.MapPost("/",
       (CategoryService service, CategoryModel category)=>
         service.SaveCategory(category).ToApiResult()
+    );
+    groupBuilder.MapGet("/all",
+      (CategoryService service) =>
+        service.GetAll().ToApiResult()
+    );
+    groupBuilder.MapGet("/by-id/{id:int}",
+      (CategoryService service, int id) =>
+        service.GetByIdAsync(id).ToApiResult()
+    );
+    groupBuilder.MapDelete("/{id:int}",
+      (CategoryService service, int id) =>
+        service.DeleteAsync(id).ToApiResult()
     );
   }
   
