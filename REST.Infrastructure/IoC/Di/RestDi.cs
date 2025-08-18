@@ -29,6 +29,7 @@ public static class RestDi
     // collection.AddScoped<AuthService>();
 
     collection.AddTransient<CategoryService>();
+    collection.AddTransient<ItemService>();
     return collection;
   }
     
@@ -36,6 +37,7 @@ public static class RestDi
   {
     // collection.AddTransient<IUserRepository, UserRepository>();
     collection.AddTransient<ICategoryRepository, CategoryRepository>();
+    collection.AddTransient<IItemRepository, ItemRepository>();
     return collection;
   }
 }

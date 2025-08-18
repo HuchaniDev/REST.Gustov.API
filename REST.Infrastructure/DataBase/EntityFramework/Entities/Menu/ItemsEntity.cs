@@ -26,6 +26,7 @@ public class ItemsEntity:BaseAuditable,IIdentifiable
   
   public StatusEnum Status { get; set; }
   
+  public string ImageUrl { get; set; }
   public int CategoryId { get; set; }
   
   //relations

@@ -71,5 +71,6 @@ if (app.Environment.IsDevelopment())
 
 // 🔹 REGISTRO DE ENDPOINTS
 app.MapCategoryEndpoints();
+app.MapItemEndpoints();
 
 app.Run();

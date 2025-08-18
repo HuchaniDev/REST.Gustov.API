@@ -14,7 +14,13 @@ public class RestDbContext: DbContext
     // Configurado como NoTracking por defecto para optimizar consultas de solo lectura
     //ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
   }
-  
+
+  protected override void OnModelCreating(ModelBuilder builder)
+  {
+    builder.ApplyConfiguration(new ItemConfiguration());
+    base.OnModelCreating(builder); 
+  }
+
   public override int SaveChanges()
   {
     UpdateAuditFields();
