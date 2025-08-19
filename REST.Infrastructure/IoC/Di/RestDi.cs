@@ -7,9 +7,11 @@ using REST.Application.Services.Reports;
 using REST.Application.Services.Sale;
 using REST.Domain;
 using REST.Domain.Repositories.Menu;
+using REST.Domain.Repositories.Report;
 using REST.Domain.Repositories.Sale;
 using REST.Infrastructure.DataBase.EntityFramework.Context;
 using REST.Infrastructure.DataBase.EntityFramework.Repositories.Menu;
+using REST.Infrastructure.DataBase.EntityFramework.Repositories.Report;
 using REST.Infrastructure.DataBase.EntityFramework.Repositories.Sale;
 
 namespace REST.Infrastructure.IoC.Di;
@@ -48,7 +50,7 @@ public static class RestDi
     collection.AddTransient<ICategoryRepository, CategoryRepository>();
     collection.AddTransient<IItemRepository, ItemRepository>();
     collection.AddTransient<ISaleRepository, SaleRepository>();
-    collection.AddTransient<ISaleRepository, SaleRepository>();
+    collection.AddTransient<ISaleReportsRepository, SaleReportsRepository>();
     return collection;
   }
 }

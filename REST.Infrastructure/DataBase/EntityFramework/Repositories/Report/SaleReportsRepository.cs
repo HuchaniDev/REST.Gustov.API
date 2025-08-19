@@ -33,8 +33,8 @@ public class SaleReportsRepository(RestDbContext context):ISaleReportsRepository
       .Select(g => new ItemReportDto(
         g.Key.Name,
         g.Sum(x => x.Quantity),
-        g.Sum(x => g.Key.SubTotal/x.Quantity),
-        g.Key.SubTotal
+        g.Sum(x => x.SubTotal) / g.Sum(x => x.Quantity),
+        g.Sum(x => x.SubTotal) 
       ))
       .ToList();
 
