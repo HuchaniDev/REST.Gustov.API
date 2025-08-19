@@ -16,9 +16,21 @@ public static class ItemEndPoints
       (ItemService service, ItemModel item)=>
         service.SaveItem(item).ToApiResult()
     );
-    groupBuilder.MapGet("/all",
-      (ItemService service) =>
-        service.GetAll().ToApiResult()
+    groupBuilder.MapPost("/update-price/{id:int}",
+      (ItemService service, int id, decimal price)=>
+        service.UpdatePrice(id,price).ToApiResult()
+    );
+    groupBuilder.MapPost("/update-stock/{id:int}",
+      (ItemService service, int id, int stock)=>
+        service.UpdateStock(id,stock).ToApiResult()
+    );
+    groupBuilder.MapPost("/update-status/{id:int}",
+      (ItemService service, int id, int status)=>
+        service.UpdateStatus(id, status).ToApiResult()
+    );
+    groupBuilder.MapGet("/all-filter",
+      (ItemService service, string? searchTerm=null,int category=0, int status=0) =>
+        service.GetAllFilter(searchTerm,category, status).ToApiResult()
     );
     groupBuilder.MapGet("/by-id/{id:int}",
       (ItemService service, int id) =>

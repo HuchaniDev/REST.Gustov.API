@@ -1,10 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using REST.Application.Services.CodeGenerator;
 using REST.Application.Services.Menu;
+using REST.Application.Services.Reports;
+using REST.Application.Services.Sale;
+using REST.Domain;
 using REST.Domain.Repositories.Menu;
+using REST.Domain.Repositories.Sale;
 using REST.Infrastructure.DataBase.EntityFramework.Context;
 using REST.Infrastructure.DataBase.EntityFramework.Repositories.Menu;
+using REST.Infrastructure.DataBase.EntityFramework.Repositories.Sale;
 
 namespace REST.Infrastructure.IoC.Di;
 
@@ -30,6 +36,9 @@ public static class RestDi
 
     collection.AddTransient<CategoryService>();
     collection.AddTransient<ItemService>();
+    collection.AddTransient<SaleService>();
+    collection.AddScoped<ICodeGeneratorService, CodeGeneratorService>();
+    collection.AddTransient<SaleReportService>();
     return collection;
   }
     
@@ -38,6 +47,8 @@ public static class RestDi
     // collection.AddTransient<IUserRepository, UserRepository>();
     collection.AddTransient<ICategoryRepository, CategoryRepository>();
     collection.AddTransient<IItemRepository, ItemRepository>();
+    collection.AddTransient<ISaleRepository, SaleRepository>();
+    collection.AddTransient<ISaleRepository, SaleRepository>();
     return collection;
   }
 }

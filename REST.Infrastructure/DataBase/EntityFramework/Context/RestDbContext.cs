@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using REST.Infrastructure.DataBase.EntityFramework.Entities;
 using REST.Infrastructure.DataBase.EntityFramework.Entities.Menu;
+using REST.Infrastructure.DataBase.EntityFramework.Entities.Sale;
 
 namespace REST.Infrastructure.DataBase.EntityFramework.Context;
 
@@ -8,6 +9,8 @@ public class RestDbContext: DbContext
 {
   public DbSet<CategoryEntity>Categories { get; set; }
   public DbSet<ItemsEntity>Items { get; set; }
+  public DbSet<SaleEntity>Sales { get; set; }
+  public DbSet<SalesDetailEntity>SaleDetails { get; set; }
   
   public RestDbContext(DbContextOptions<RestDbContext> options): base(options)
   {
@@ -18,6 +21,7 @@ public class RestDbContext: DbContext
   protected override void OnModelCreating(ModelBuilder builder)
   {
     builder.ApplyConfiguration(new ItemConfiguration());
+    builder.ApplyConfiguration(new SalesDetailConfiguration());
     base.OnModelCreating(builder); 
   }
 

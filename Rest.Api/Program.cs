@@ -1,6 +1,8 @@
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Rest.Api.EndPoints.Menu;
+using Rest.Api.EndPoints.Reports;
+using Rest.Api.EndPoints.Sale;
 using Rest.Api.Middleware;
 using REST.Infrastructure.IoC.Di;
 
@@ -72,5 +74,7 @@ if (app.Environment.IsDevelopment())
 // 🔹 REGISTRO DE ENDPOINTS
 app.MapCategoryEndpoints();
 app.MapItemEndpoints();
+app.MapSaleEndpoints();
+app.MapSaleReportEndpoints();
 
 app.Run();

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using REST.Domain.Common.Enums;
+using REST.Infrastructure.DataBase.EntityFramework.Entities.Sale;
 
 namespace REST.Infrastructure.DataBase.EntityFramework.Entities.Menu;
 
@@ -31,4 +32,6 @@ public class ItemsEntity:BaseAuditable,IIdentifiable
   
   //relations
   public virtual CategoryEntity Category { get; set; }
+  public virtual ICollection<SalesDetailEntity> SalesDetails { get; set; }
+
 }

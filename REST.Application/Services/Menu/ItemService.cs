@@ -1,7 +1,9 @@
 ﻿using System.Net;
+using REST.Domain.Common.Enums;
 using REST.Domain.Common.Response;
 using REST.Domain.Models.Menu;
 using REST.Domain.Repositories.Menu;
+using REST.Domain.ValidatorServices;
 
 namespace REST.Application.Services.Menu;
 
@@ -19,9 +21,33 @@ public class ItemService(IItemRepository itemRepository)
     return Result<object>.Success(new {}, HttpStatusCode.OK);
   }
 
-  public async Task<Result<object>> GetAll()
+  public async Task<Result<object>>UpdatePrice(int id, decimal price)
   {
-    var items = await itemRepository.GetAllAsync();
+    return await itemRepository.UpdatePriceAsync(id, price)
+      ? Result<object>.Success(new { }, HttpStatusCode.OK)
+      : Result<object>.Failure(["error al actualizar el precio"], HttpStatusCode.BadRequest);
+  }
+  public async Task<Result<object>>UpdateStock(int id, int stock)
+  {
+    return await itemRepository.UpdateStockAsync(id, stock)
+      ? Result<object>.Success(new { }, HttpStatusCode.OK)
+      : Result<object>.Failure(["error al actualizar el stock"], HttpStatusCode.BadRequest);
+  }
+  public async Task<Result<object>>UpdateStatus(int id, int status)
+  {
+    if(!status.IsValidStatus())
+      return Result<object>.Failure(["Estado no disponible"],HttpStatusCode.BadRequest);
+
+    return await itemRepository.UpdateStatusAsync(id,(StatusEnum)status)
+      ? Result<object>.Success(new { }, HttpStatusCode.OK)
+      : Result<object>.Failure(["error al actualizar el estado"], HttpStatusCode.BadRequest);
+  }
+  public async Task<Result<object>> GetAllFilter(string? searchTerm,int category,int status)
+  {
+    if(!(status.IsValidStatus() || status==0))
+      return Result<object>.Failure(["Verifique el estado"], HttpStatusCode.BadRequest);
+      
+    var items = await itemRepository.GetAllAsync(searchTerm, category,status);
     return Result<object>.Success(items, HttpStatusCode.OK);
   }
 
