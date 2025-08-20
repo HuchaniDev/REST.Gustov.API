@@ -6,6 +6,6 @@ public record ItemsSummaryDto(
   decimal Price,
   int Stock,
   string StatusColor,
-  string Status,
+  bool Status,
   string ImageUrl
   );

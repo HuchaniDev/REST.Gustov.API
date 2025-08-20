@@ -25,7 +25,7 @@ public class ItemsEntity:BaseAuditable,IIdentifiable
   [Required]
   public int Stock { get; set; }
   
-  public StatusEnum Status { get; set; }
+  public bool Status { get; set; }
   
   public string ImageUrl { get; set; }
   public int CategoryId { get; set; }

@@ -43,7 +43,7 @@ public class ItemRepository(RestDbContext context):IItemRepository
         .SetProperty(i => i.Stock, stock))>0;
   }
 
-  public async Task<bool> UpdateStatusAsync(int id, StatusEnum status)
+  public async Task<bool> UpdateStatusAsync(int id, bool status)
   {
     return await context.Items
       .Where(i => i.Id == id)
@@ -57,7 +57,7 @@ public class ItemRepository(RestDbContext context):IItemRepository
       .AnyAsync(i => i.Name == name && i.Id != id);
   }
 
-  public Task<CategoryItemsDto[]> GetAllAsync(string? searchTerm,int category, int status)
+  public Task<CategoryItemsDto[]> GetAllFilterAsync(string? searchTerm,int category, bool status)
   {
     var query = context.Items.AsNoTracking().AsQueryable();
     if (searchTerm != null)
@@ -66,13 +66,12 @@ public class ItemRepository(RestDbContext context):IItemRepository
     if (category != 0)
       query = query.Where(i => i.CategoryId == category);
 
-    if (status != 0)
-    {
-      var enumStatus = (StatusEnum)status;
-      query = query.Where(i => i.Status == enumStatus);
-    }
+    if (status)
+      query = query.Where(i => i.Status);
     
     var items = query
+      .OrderByDescending(i=>i.Status)
+      .ThenByDescending(i=>i.Name)
       .Select(i => new{
         categoryId=i.Category.Id,
         categoryName=i.Category.Name,
@@ -81,8 +80,8 @@ public class ItemRepository(RestDbContext context):IItemRepository
         itemName=i.Name,
         i.Price,
         i.Stock,
-        statusColor=i.Status.GetColor(),
-        status=i.Status.ToString(),
+        statusColor=i.Status?"#4CAF50":"#FF9800",
+        status=i.Status,
         i.ImageUrl
         })
       .GroupBy(i => i.categoryId)
@@ -101,6 +100,29 @@ public class ItemRepository(RestDbContext context):IItemRepository
           )).ToArray()
         ))
       .ToArrayAsync();
+    return items;
+  }
+  
+  public Task<CategoryItemsDto[]> GetAllAsync()
+  {
+    var items = context.Categories.AsNoTracking()
+      .OrderByDescending(c=>c.Name)
+      .Select(c => new CategoryItemsDto(
+          c.Id,
+          c.Name,
+          c.Description,
+          c.Items.Select(i=> new ItemsSummaryDto(
+            i.Id,
+            i.Name,
+            i.Price,
+            i.Stock,
+            i.Status?"#4CAF50":"#FF9800",
+            i.Status,
+            i.ImageUrl
+            ))
+            .ToArray()
+          )
+        ).ToArrayAsync();
     return items;
   }
 

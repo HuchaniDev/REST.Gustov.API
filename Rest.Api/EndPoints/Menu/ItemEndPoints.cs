@@ -25,11 +25,15 @@ public static class ItemEndPoints
         service.UpdateStock(id,stock).ToApiResult()
     );
     groupBuilder.MapPost("/update-status/{id:int}",
-      (ItemService service, int id, int status)=>
+      (ItemService service, int id, bool status)=>
         service.UpdateStatus(id, status).ToApiResult()
     );
+    groupBuilder.MapGet("/all",
+      (ItemService service) =>
+        service.GetAll().ToApiResult()
+    );
     groupBuilder.MapGet("/all-filter",
-      (ItemService service, string? searchTerm=null,int category=0, int status=0) =>
+      (ItemService service, string? searchTerm=null,int category=0, bool status=false) =>
         service.GetAllFilter(searchTerm,category, status).ToApiResult()
     );
     groupBuilder.MapGet("/by-id/{id:int}",

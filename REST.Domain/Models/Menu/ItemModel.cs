@@ -11,12 +11,12 @@ public class ItemModel:TraceModel
   public decimal Price { get; private set; }
   public string? Description { get; private set; }
   public int Stock { get; private set; }
-  public StatusEnum Status { get; private set; }
+  public bool Status { get; private set; }
   public string ImageUrl { get; private set; }
   public int CategoryId { get; private set; }
 
   [JsonConstructor]
-  public ItemModel(int id, string name, decimal price, string? description, StatusEnum status, string imageUrl, int categoryId)
+  public ItemModel(int id, string name, decimal price, string? description, bool status, string imageUrl, int categoryId)
   {
     if(!id.IdIsValid())
       AddError("Id Inválido");
@@ -43,7 +43,7 @@ public class ItemModel:TraceModel
     CategoryId = categoryId;
   
   }
-  public ItemModel(int id, string name, decimal price, string? description, int stock,StatusEnum status, string imageUrl, int categoryId,bool skipValidations)
+  public ItemModel(int id, string name, decimal price, string? description, int stock,bool status, string imageUrl, int categoryId,bool skipValidations)
   {
     Id = id;
     Name = name;

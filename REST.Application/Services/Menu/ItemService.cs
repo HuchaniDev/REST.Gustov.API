@@ -1,6 +1,6 @@
 ﻿using System.Net;
-using REST.Domain.Common.Enums;
 using REST.Domain.Common.Response;
+using REST.Domain.Dtos.Menu;
 using REST.Domain.Models.Menu;
 using REST.Domain.Repositories.Menu;
 using REST.Domain.ValidatorServices;
@@ -33,24 +33,25 @@ public class ItemService(IItemRepository itemRepository)
       ? Result<object>.Success(new { }, HttpStatusCode.OK)
       : Result<object>.Failure(["error al actualizar el stock"], HttpStatusCode.BadRequest);
   }
-  public async Task<Result<object>>UpdateStatus(int id, int status)
+  public async Task<Result<object>>UpdateStatus(int id, bool status)
   {
-    if(!status.IsValidStatus())
-      return Result<object>.Failure(["Estado no disponible"],HttpStatusCode.BadRequest);
-
-    return await itemRepository.UpdateStatusAsync(id,(StatusEnum)status)
+    // if(!status.IsValidStatus())
+    //   return Result<object>.Failure(["Estado no disponible"],HttpStatusCode.BadRequest);
+    //
+    return await itemRepository.UpdateStatusAsync(id,status)
       ? Result<object>.Success(new { }, HttpStatusCode.OK)
       : Result<object>.Failure(["error al actualizar el estado"], HttpStatusCode.BadRequest);
   }
-  public async Task<Result<object>> GetAllFilter(string? searchTerm,int category,int status)
+  public async Task<Result<CategoryItemsDto[]>> GetAllFilter(string? searchTerm,int category,bool status)
   {
-    if(!(status.IsValidStatus() || status==0))
-      return Result<object>.Failure(["Verifique el estado"], HttpStatusCode.BadRequest);
-      
-    var items = await itemRepository.GetAllAsync(searchTerm, category,status);
-    return Result<object>.Success(items, HttpStatusCode.OK);
+    var items = await itemRepository.GetAllFilterAsync(searchTerm, category,status);
+    return Result<CategoryItemsDto[]>.Success(items, HttpStatusCode.OK);
   }
-
+  public async Task<Result<CategoryItemsDto[]>> GetAll()
+  {
+    var items = await itemRepository.GetAllAsync();
+    return Result<CategoryItemsDto[]>.Success(items, HttpStatusCode.OK);
+  }
   public async Task<Result<object>> GetByIdAsync(int id)
   {
     var item = await itemRepository.GetByIdAsync(id);
