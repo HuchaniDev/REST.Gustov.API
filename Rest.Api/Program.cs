@@ -1,44 +1,80 @@
-var builder = WebApplication.CreateBuilder(args);
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using Rest.Api.EndPoints.Menu;
+using Rest.Api.EndPoints.Reports;
+using Rest.Api.EndPoints.Sale;
+using Rest.Api.Middleware;
+using REST.Infrastructure.IoC.Di;
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+  options.AddPolicy("CORSPolicy",
+    b => b
+      .AllowAnyMethod()
+      .AllowAnyHeader()
+      .AllowCredentials()
+      .SetIsOriginAllowed((hosts) => true));
+});
+
+// 🔹 REGISTRO DE SERVICIOS PERSONALIZADOS
+builder.Services
+  .RegisterDataBase(builder.Configuration)
+  .RegisterRepositories()
+  .RegisterServices();
+
+// 🔹 CONFIGURACIÓN DE AUTENTICACIÓN JWT
+// var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+// var key = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]);
+
+// builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//   .AddJwtBearer(options =>
+//   {
+//     options.TokenValidationParameters = new TokenValidationParameters
+//     {
+//       ValidateIssuer = true,
+//       ValidateAudience = true,
+//       ValidateLifetime = true,
+//       ValidateIssuerSigningKey = true,
+//       ValidIssuer = jwtSettings["Issuer"],
+//       ValidAudience = jwtSettings["Audience"],
+//       IssuerSigningKey = new SymmetricSecurityKey(key)
+//     };
+//   });
+
+//builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseCors("CORSPolicy");
+app.UseMiddleware<MiddlewareException>();
+app.UseMiddleware<NotFoundMiddleware>();
+//app.UseMiddleware<AuthorizationMiddleware>();
+
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+  c.SwaggerEndpoint("/swagger/v1/swagger.json", "APIs Rest-Gustov V.1.0");
+  c.RoutePrefix = "swagger";
+  c.EnableFilter();
+});
+
 if (app.Environment.IsDevelopment())
 {
   app.UseSwagger();
   app.UseSwaggerUI();
 }
+// app.UseAuthentication();
+// app.UseAuthorization();
 
-app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-  "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-  {
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-          DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-          Random.Shared.Next(-20, 55),
-          summaries[Random.Shared.Next(summaries.Length)]
-        ))
-      .ToArray();
-    return forecast;
-  })
-  .WithName("GetWeatherForecast")
-  .WithOpenApi();
+// 🔹 REGISTRO DE ENDPOINTS
+app.MapCategoryEndpoints();
+app.MapItemEndpoints();
+app.MapSaleEndpoints();
+app.MapSaleReportEndpoints();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-  public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
