@@ -16,7 +16,7 @@ public class ItemModel:TraceModel
   public int CategoryId { get; private set; }
 
   [JsonConstructor]
-  public ItemModel(int id, string name, decimal price, string? description, bool status, string imageUrl, int categoryId)
+  public ItemModel(int id, string name, decimal price, string? description, int stock, string imageUrl, int categoryId)
   {
     if(!id.IdIsValid())
       AddError("Id Inválido");
@@ -27,9 +27,9 @@ public class ItemModel:TraceModel
     if(price < 0)
       AddError("El precio no pude ser negativo");
     
-    // if(!status.IsValidStatus())
-    //   AddError("Estado no disponible");
-    //
+    if(stock<0)
+      AddError("el stockno puede ser negativo");
+    
     if(!categoryId.ForeignKeyIsValid())
       AddError("Categoria inválido");
     
@@ -37,8 +37,8 @@ public class ItemModel:TraceModel
     Name = name;
     Price = price;
     Description = description;
-    Stock = 0;
-    Status = status;
+    Stock = stock;
+    Status = true;
     ImageUrl = imageUrl;
     CategoryId = categoryId;
   
