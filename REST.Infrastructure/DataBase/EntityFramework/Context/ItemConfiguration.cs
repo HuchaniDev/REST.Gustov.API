@@ -9,6 +9,9 @@ public class ItemConfiguration:IEntityTypeConfiguration<ItemsEntity>
 {
   public void Configure(EntityTypeBuilder<ItemsEntity> builder)
   {
+    builder.Property(i => i.Discount)
+      .HasDefaultValue(0);
+    
     builder.HasOne(i=>i.Category)
       .WithMany(c=>c.Items)
       .HasForeignKey(i=>i.CategoryId)

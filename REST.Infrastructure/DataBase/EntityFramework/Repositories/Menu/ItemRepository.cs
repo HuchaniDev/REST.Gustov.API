@@ -82,6 +82,7 @@ public class ItemRepository(RestDbContext context):IItemRepository
         i.Stock,
         statusColor=i.Status?"#4CAF50":"#FF9800",
         status=i.Status,
+        discount = i.Discount,
         i.ImageUrl
         })
       .GroupBy(i => i.categoryId)
@@ -95,6 +96,7 @@ public class ItemRepository(RestDbContext context):IItemRepository
           i.Price,
           i.Stock,
           i.statusColor,
+          i.discount,
           i.status,
           i.ImageUrl
           )).ToArray()
@@ -117,6 +119,7 @@ public class ItemRepository(RestDbContext context):IItemRepository
             i.Price,
             i.Stock,
             i.Status?"#4CAF50":"#FF9800",
+            i.Discount,
             i.Status,
             i.ImageUrl
             ))
