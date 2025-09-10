@@ -15,6 +15,7 @@ public static class ItemsExtension
       Description = item.Description,
       Stock = item.Stock,
       Status = item.Status,
+      Discount = item.Discount,
       ImageUrl = item.ImageUrl,
       CategoryId = item.CategoryId
     };
@@ -29,6 +30,7 @@ public static class ItemsExtension
       item.Description,
       item.Stock,
       item.Status,
+      item.Discount,
       item.ImageUrl,
       item.CategoryId,
       true

@@ -12,11 +12,12 @@ public class ItemModel:TraceModel
   public string? Description { get; private set; }
   public int Stock { get; private set; }
   public bool Status { get; private set; }
+  public int Discount { get; private set; }
   public string ImageUrl { get; private set; }
   public int CategoryId { get; private set; }
 
   [JsonConstructor]
-  public ItemModel(int id, string name, decimal price, string? description, int stock, string imageUrl, int categoryId)
+  public ItemModel(int id, string name, decimal price, string? description, int stock, int discount, string imageUrl, int categoryId)
   {
     if(!id.IdIsValid())
       AddError("Id Inválido");
@@ -33,17 +34,21 @@ public class ItemModel:TraceModel
     if(!categoryId.ForeignKeyIsValid())
       AddError("Categoria inválido");
     
+    if(discount < 0)
+      AddError("no se permiten numeros negativos para descuentos");
+    
     Id = id;
     Name = name;
     Price = price;
     Description = description;
     Stock = stock;
     Status = true;
+    Discount = discount;
     ImageUrl = imageUrl;
     CategoryId = categoryId;
   
   }
-  public ItemModel(int id, string name, decimal price, string? description, int stock,bool status, string imageUrl, int categoryId,bool skipValidations)
+  public ItemModel(int id, string name, decimal price, string? description, int stock,bool status, int discount, string imageUrl, int categoryId,bool skipValidations)
   {
     Id = id;
     Name = name;
@@ -51,6 +56,7 @@ public class ItemModel:TraceModel
     Description = description;
     Stock = stock;
     Status = status;
+    Discount = discount;
     ImageUrl = imageUrl;
     CategoryId = categoryId;
   }

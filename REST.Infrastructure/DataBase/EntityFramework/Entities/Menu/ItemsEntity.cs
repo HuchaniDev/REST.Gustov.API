@@ -27,6 +27,8 @@ public class ItemsEntity:BaseAuditable,IIdentifiable
   
   public bool Status { get; set; }
   
+  public int Discount { get; set; }
+  
   public string ImageUrl { get; set; }
   public int CategoryId { get; set; }
   
